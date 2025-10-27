@@ -30,8 +30,12 @@ It supports post-training **reduced-error pruning** and includes optional tree v
 
 ## Run code
 python main.py --data "wifi_db/clean_dataset.txt"
+
 python main.py --data "wifi_db/clean_dataset.txt" --prune
+
 python main.py --data "wifi_db/noisy_dataset.txt"
+
 python main.py --data "wifi_db/noisy_dataset.txt" --prune
+
 python main.py --data "wifi_db/clean_dataset.txt" --visualize
 
