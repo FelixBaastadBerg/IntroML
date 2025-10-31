@@ -308,7 +308,7 @@ def prune_tree(tree, train_data, validation_data):
     # Return the node
     return (feature, thresh, left, right)
 
-def getDepth(node, currentDepth=0):
+def getDepth(node, currentDepth=1):
    if isinstance(node, np.float64):
       return currentDepth
 
