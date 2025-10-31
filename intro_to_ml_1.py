@@ -195,11 +195,8 @@ def cross_validate(dataset, toPrune):
 
         tree = decision_tree_learning(pruning_data, 0)[0]
 
-        depths_before.append(getDepth(tree))
-
         # Prune the tree based on different folds being the validation set
         pruned_tree = prune_tree(tree, pruning_data, pruning_validation_data)
-        depths_after.append(getDepth(pruned_tree))
         error = 1 - evaluate(pruning_validation_data, pruned_tree)[0]
         if lowest_error[0] > error:
           lowest_error = (error, j, pruned_tree)
@@ -207,6 +204,9 @@ def cross_validate(dataset, toPrune):
       # Use the best pruned tree
       best_pruned_tree = lowest_error[2]
       tree = best_pruned_tree
+      max_depth = getDepth(tree)
+      depths_before.append(max_depth)
+      depths_after.append(max_depth)
 
     # evaluate the trained tree on the test data
     accuracy, labels, predictions = evaluate(test_db, tree)
@@ -343,7 +343,7 @@ def main():
 
     print("Pruned: ", args.prune, "\n")
 
-    (print("Avg Max Depth: ", depth[0], "\n") if not args.prune else print("Avg Max Depth Before Prune: ", round(depth[0], 3), "\nAvg Max Depth After Prune: ", round(depth[1], 3), "\n"))
+    (print("Avg Max Depth: ", depth[0], "\n") if not args.prune else print("Avg Max Depth After Prune: ", depth[1], "\n"))
 
     print("Confusion Marix: \n", confusion_matrix,"\nAccuracy: \n", accuracy,"\nPrecision By Label: \n",precision,"\nRecall By Label: \n", recall,"\nF1 By Label: \n", f1, "\n")
 
