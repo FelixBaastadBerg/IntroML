@@ -5,10 +5,10 @@ The work follows the COMP70050 coursework specification. The
 
 ---
 
-## Repo Overview
+## Repository Overview
 
 The repository contains the following files:
-- *img* is the folder where the visualizations are exported to. Our four images are four the combinations of $(prune, no prune) \times (clean data, noisy data)$.
+- *img* is the folder where the visualizations are exported to. Our four images are four the combinations of $(\text{prune}, \texxt{no prune}) \times (\text{clean data}, \text{noisy data})$.
 
 ---
 
