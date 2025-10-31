@@ -326,31 +326,3 @@ if __name__ == '__main__':
     except SystemExit:
         # argparse will call sys.exit; ensure clean exit in notebooks
         pass
-
-'''clean_dataset = np.loadtxt("clean_dataset.txt")
-noisy_dataset = np.loadtxt("noisy_dataset.txt")
-
-seed = 23 
-np.random.RandomState(seed).shuffle(clean_dataset)
-np.random.RandomState(seed).shuffle(noisy_dataset)
-
-clean_confusion_matrix, clean_average = cross_validate(clean_dataset, False)
-clean_confusion_matrix_pruned, clean_average_pruned = cross_validate(clean_dataset, True)
-
-noisy_confusion_matrix, noisy_average = cross_validate(noisy_dataset, False)
-noisy_confusion_matrix_pruned, noisy_average_pruned = cross_validate(noisy_dataset, True)
-
-clean_precision, clean_recall, clean_f1 = precision_recall_f1(clean_confusion_matrix)
-clean_precision_pruned, clean_recall_pruned, clean_f1_pruned = precision_recall_f1(clean_confusion_matrix_pruned)
-
-noisy_precision, noisy_recall, noisy_f1 = precision_recall_f1(noisy_confusion_matrix)
-noisy_precision_pruned, noisy_recall_pruned, noisy_f1_pruned = precision_recall_f1(noisy_confusion_matrix_pruned)
-
-print("Seed Used: ", seed, "\n")
-
-print("Clean Data: \nConfusion Marix: \n", clean_confusion_matrix,"\nAverage: \n", clean_average,"\nPrecision By Label: \n",clean_precision,"\nRecall By Label: \n", clean_recall,"\nF1 By Label: \n", clean_f1, "\n")
-print("Clean Data Pruned: \nConfusion Marix: \n", clean_confusion_matrix_pruned,"\nAverage: \n", clean_average_pruned,"\nPrecision By Label: \n",clean_precision_pruned,"\nRecall By Label: \n", clean_recall_pruned,"\nF1 By Label: \n", clean_f1_pruned, "\n")
-
-print("Noisy Data: \nConfusion Marix: \n", noisy_confusion_matrix,"\nAverage: \n", noisy_average,"\nPrecision By Label: \n", noisy_precision,"\nRecall By Label: \n", noisy_recall,"\nF1 By Label: \n", noisy_f1, "\n")
-print("Noisy Data Pruned: \nConfusion Marix: \n", noisy_confusion_matrix_pruned,"\nAverage: \n", noisy_average_pruned,"\nPrecision By Label: \n",noisy_precision_pruned,"\nRecall By Label: \n", noisy_recall_pruned,"\nF1 By Label: \n", noisy_f1_pruned)
-'''
