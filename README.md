@@ -1,7 +1,6 @@
 # Decision Tree Coursework – COMP70050 (Introduction to Machine Learning)
 
-This repository contains the implementation and evaluation of a Decision Tree Classifier for indoor room localisation using WiFi signal strengths.  
-The work follows the COMP70050 coursework specification. 
+This repository contains the implementation and evaluation of a Decision Tree Classifier for indoor room localisation using WiFi signal strengths. The work follows the COMP70050 coursework specification. 
 
 The code trains the decision tree using the information gain splitting rule, choosing the feature and value that maximizes information gain under entropy rules. For this, we use a 10-fold cross-validation and report average performance over these 10 evaluations. We do this for both noisy and clean data and for pruned and full trees to see how pruning affects generalization and test performance. The results shows that for the noisy data, the model generalizes better with pruning. 
 
