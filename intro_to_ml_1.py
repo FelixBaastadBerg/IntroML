@@ -321,6 +321,8 @@ def main():
 
     print("Pruned : ", args.prune, "\n")
 
+    print("Max Depth: ", tree[1])
+
     print("Confusion Marix: \n", confusion_matrix,"\nAccuracy: \n", accuracy,"\nPrecision By Label: \n",precision,"\nRecall By Label: \n", recall,"\nF1 By Label: \n", f1, "\n")
 
     if (args.visualize):
