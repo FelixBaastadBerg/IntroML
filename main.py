@@ -1,6 +1,7 @@
 """
 Run examples:
   python main.py --data "wifi_db/clean_dataset.txt" --prune
+  python main.py --data "wifi_db/clean_dataset.txt" --visualize
   python main.py --data "wifi_db/noisy_dataset.txt" 
 
 Outputs a concise text report to stdout.
@@ -15,6 +16,7 @@ from typing import Dict, Optional, Tuple, Any, List
 
 import numpy as np
 import matplotlib.pyplot as plt
+from viz_tree import visualize_tree
 
 # -----------------------------
 # Utilities
@@ -318,49 +320,10 @@ def tree_depth(t: Tree) -> int:
 # -----------------------------
 # Visualization (bonus)
 # -----------------------------
+import os
+import textwrap
+import matplotlib.pyplot as plt
 
-def visualize_tree(tree: Tree, feature_names: Optional[List[str]] = None, title: str = "Decision Tree"):
-    """Produces a simple top‑down plot. Large trees may be hard to read, but meets the bonus requirement."""
-    # Compute layout (x positions by inorder traversal)
-    xs = {}
-    ys = {}
-    idx = 0
-    def inorder(node: Tree, depth: int = 0):
-        nonlocal idx
-        if isinstance(node, Node):
-            inorder(node.left, depth + 1)
-            xs[id(node)] = idx
-            ys[id(node)] = depth
-            idx += 1
-            inorder(node.right, depth + 1)
-        else:
-            xs[id(node)] = idx
-            ys[id(node)] = depth
-            idx += 1
-    inorder(tree, 0)
-
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    ax.set_title(title)
-    ax.axis('off')
-
-    def label(node: Tree) -> str:
-        if isinstance(node, Leaf):
-            return f"Leaf: y={node.prediction}\n{node.class_counts}"
-        name = f"x[{node.attribute}]" if feature_names is None else feature_names[node.attribute]
-        return f"{name} <= {node.threshold:.2f}"
-
-    def draw(node: Tree):
-        x0, y0 = xs[id(node)], -ys[id(node)]
-        ax.text(x0, y0, label(node), ha='center', va='center', bbox=dict(boxstyle='round', fc='w'), fontsize=8)
-        if isinstance(node, Node):
-            for child in [node.left, node.right]:
-                x1, y1 = xs[id(child)], -ys[id(child)]
-                ax.plot([x0, x1], [y0, y1])
-                draw(child)
-    draw(tree)
-    plt.tight_layout()
-    plt.show()
 
 
 # -----------------------------
@@ -447,7 +410,14 @@ def main():
     parser.add_argument('--min_samples_split', type=int, default=2)
     parser.add_argument('--prune', action='store_true', help='Enable reduced-error pruning (nested CV)')
     parser.add_argument('--val_frac', type=float, default=0.2, help='Validation fraction for pruning (inside train)')
-    parser.add_argument('--visualize', action='store_true', help='Show a visualization of a tree trained on full data (bonus)')
+    parser.add_argument('--visualize', action='store_true',
+                    help='Render a Graphviz visualization of a tree trained on the FULL dataset')
+    parser.add_argument('--viz_out', type=str, default='tree_clean',
+                    help='Base filename (no extension) for visualization output (default: tree_clean)')
+    parser.add_argument('--viz_format', type=str, default='svg', choices=['svg', 'png', 'pdf'],
+                    help='Graphviz output format (default: svg)')
+    parser.add_argument('--viz_rankdir', type=str, default='TB', choices=['TB', 'LR'],
+                    help='Layout direction: TB=top-bottom, LR=left-right (default: TB)')
     args = parser.parse_args()
 
     # Run base 10-fold cross‑validation
@@ -473,8 +443,15 @@ def main():
     if args.visualize:
         X, y = load_dataset(args.data)
         tree_full = build_tree(X, y)
-        visualize_tree(tree_full, feature_names=[f"AP{i}" for i in range(X.shape[1])],
-                       title=f"Decision Tree trained on {args.data}")
+        feature_names = [f"AP{i}" for i in range(X.shape[1])]
+        visualize_tree(
+            tree_full,
+            feature_names=feature_names,
+            title=f"Decision Tree trained on {args.data}",
+            data_path=args.data,   # autosave next to dataset folder
+            show_fig=False
+        )
+        
 
 
 if __name__ == '__main__':
