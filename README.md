@@ -22,20 +22,19 @@ It supports post-training **reduced-error pruning** and includes optional tree v
 - Decision tree learning with continuous features  
 - 10-fold cross-validation  
 - Accuracy, precision, recall, and F1-score per class  
-- Reduced-error pruning  
-- Depth measurement  
+- Reduced-error pruning   
 - Tree visualization
 
 ---
 
 ## Run code
-python main.py --data "wifi_db/clean_dataset.txt"
+python intro_to_ml_1.py --data "wifi_db/clean_dataset.txt"
 
-python main.py --data "wifi_db/clean_dataset.txt" --prune
+python intro_to_ml_1.py --data "wifi_db/clean_dataset.txt" --prune
 
-python main.py --data "wifi_db/noisy_dataset.txt"
+python intro_to_ml_1.py --data "wifi_db/noisy_dataset.txt"
 
-python main.py --data "wifi_db/noisy_dataset.txt" --prune
+python intro_to_ml_1.py --data "wifi_db/noisy_dataset.txt" --prune
 
-python main.py --data "wifi_db/clean_dataset.txt" --visualize
+python intro_to_ml_1.py --data "wifi_db/clean_dataset.txt" --visualize
 
