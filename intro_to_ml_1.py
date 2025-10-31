@@ -341,7 +341,7 @@ def main():
 
     print("Pruned: ", args.prune, "\n")
 
-    (print("Max Depth: ", depth[0], "\n") if not args.prune else print("Avg Max Depth Before Prune: ", depth[0], "\nAvg Max Depth After Prune: ", depth[1], "\n"))
+    (print("Max Depth: ", depth[0], "\n") if not args.prune else print("Avg Max Depth Before Prune: ", round(depth[0], 3), "\nAvg Max Depth After Prune: ", round(depth[1], 3), "\n"))
 
     print("Confusion Marix: \n", confusion_matrix,"\nAccuracy: \n", accuracy,"\nPrecision By Label: \n",precision,"\nRecall By Label: \n", recall,"\nF1 By Label: \n", f1, "\n")
 
