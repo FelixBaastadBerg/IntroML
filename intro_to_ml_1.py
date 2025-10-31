@@ -292,7 +292,41 @@ def prune_tree(tree, train_data, validation_data):
     # Return the node
     return (feature, thresh, left, right)
 
-clean_dataset = np.loadtxt("clean_dataset.txt")
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--data', type=str, required=True, help='Path to dataset txt file')
+    parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--prune', action='store_true', help='Enable reduced-error pruning (nested CV)')
+    parser.add_argument('--visualize', action='store_true',
+                    help='Render a Graphviz visualization of a tree trained on the FULL dataset')
+    args = parser.parse_args()
+
+    dataset = np.loadtxt(args.data)
+
+    np.random.RandomState(args.seed).shuffle(dataset)
+
+    confusion_matrix, average = cross_validate(dataset, args.prune)
+    precision, recall, f1 = precision_recall_f1(confusion_matrix)
+
+    print("Seed Used: ", args.seed, "\n")
+
+    print("Pruned : ", args.prune, "\n")
+
+    print("Confusion Marix: \n", confusion_matrix,"\nAverage: \n", average,"\nPrecision By Label: \n",precision,"\nRecall By Label: \n", recall,"\nF1 By Label: \n", f1, "\n")
+
+    if (args.visualize):
+       # Do visualization
+       pass
+    
+if __name__ == '__main__':
+    # Allow importing this file as a module without running
+    try:
+        main()
+    except SystemExit:
+        # argparse will call sys.exit; ensure clean exit in notebooks
+        pass
+
+'''clean_dataset = np.loadtxt("clean_dataset.txt")
 noisy_dataset = np.loadtxt("noisy_dataset.txt")
 
 seed = 23 
@@ -318,3 +352,4 @@ print("Clean Data Pruned: \nConfusion Marix: \n", clean_confusion_matrix_pruned,
 
 print("Noisy Data: \nConfusion Marix: \n", noisy_confusion_matrix,"\nAverage: \n", noisy_average,"\nPrecision By Label: \n", noisy_precision,"\nRecall By Label: \n", noisy_recall,"\nF1 By Label: \n", noisy_f1, "\n")
 print("Noisy Data Pruned: \nConfusion Marix: \n", noisy_confusion_matrix_pruned,"\nAverage: \n", noisy_average_pruned,"\nPrecision By Label: \n",noisy_precision_pruned,"\nRecall By Label: \n", noisy_recall_pruned,"\nF1 By Label: \n", noisy_f1_pruned)
+'''
