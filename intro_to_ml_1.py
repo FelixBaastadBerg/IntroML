@@ -150,8 +150,7 @@ def cross_validate(dataset, toPrune):
   fold_accuracies = []
   total_confusion_matrix = np.zeros((4,4))
 
-  depths_before = []
-  depths_after = []
+  depths_array = []
 
   # loop through each fold
   for i in range(n_folds):
@@ -175,8 +174,7 @@ def cross_validate(dataset, toPrune):
       tree = decision_tree_learning(train_db, 0)[0]
 
       max_depth = getDepth(tree)
-      depths_before.append(max_depth)
-      depths_after.append(max_depth)
+      depths_array.append(max_depth)
 
     # Code for pruning
     if toPrune:
@@ -205,8 +203,7 @@ def cross_validate(dataset, toPrune):
       best_pruned_tree = lowest_error[2]
       tree = best_pruned_tree
       max_depth = getDepth(tree)
-      depths_before.append(max_depth)
-      depths_after.append(max_depth)
+      depths_array.append(max_depth)
 
     # evaluate the trained tree on the test data
     accuracy, labels, predictions = evaluate(test_db, tree)
@@ -215,7 +212,7 @@ def cross_validate(dataset, toPrune):
     fold_accuracies.append(accuracy)
     total_confusion_matrix += confusion_matrix(labels, predictions)
 
-  depth = (np.mean(depths_before), np.mean(depths_after))
+  depth = (np.mean(depths_array))
   mean_accuracy = np.mean(fold_accuracies)
 
   return total_confusion_matrix, mean_accuracy, tree, depth
@@ -343,7 +340,7 @@ def main():
 
     print("Pruned: ", args.prune, "\n")
 
-    (print("Avg Max Depth: ", depth[0], "\n") if not args.prune else print("Avg Max Depth After Prune: ", depth[1], "\n"))
+    (print("Avg Max Depth: ", depth, "\n") if not args.prune else print("Avg Max Depth After Prune: ", depth, "\n"))
 
     print("Confusion Marix: \n", confusion_matrix,"\nAccuracy: \n", accuracy,"\nPrecision By Label: \n",precision,"\nRecall By Label: \n", recall,"\nF1 By Label: \n", f1, "\n")
 
