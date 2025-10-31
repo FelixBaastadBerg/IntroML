@@ -150,6 +150,9 @@ def cross_validate(dataset, toPrune):
   fold_accuracies = []
   total_confusion_matrix = np.zeros((4,4))
 
+  depths_before = []
+  depths_after = []
+
   # loop through each fold
   for i in range(n_folds):
     test_idx = folds[i]
@@ -172,12 +175,11 @@ def cross_validate(dataset, toPrune):
       tree = decision_tree_learning(train_db, 0)[0]
 
       max_depth = getDepth(tree)
-      depth = (max_depth, max_depth)
+      depths_before.append(max_depth)
+      depths_after.append(max_depth)
 
     # Code for pruning
     if toPrune:
-      depths_before = []
-      depths_after = []
       lowest_error = (np.inf, i, 0)
       for j in range(10):
         if j == i: # Don't use the current test data as a validation set
@@ -205,7 +207,6 @@ def cross_validate(dataset, toPrune):
       # Use the best pruned tree
       best_pruned_tree = lowest_error[2]
       tree = best_pruned_tree
-      depth = (np.mean(depths_before), np.mean(depths_after))
 
     # evaluate the trained tree on the test data
     accuracy, labels, predictions = evaluate(test_db, tree)
@@ -214,6 +215,7 @@ def cross_validate(dataset, toPrune):
     fold_accuracies.append(accuracy)
     total_confusion_matrix += confusion_matrix(labels, predictions)
 
+  depth = (np.mean(depths_before), np.mean(depths_after))
   mean_accuracy = np.mean(fold_accuracies)
 
   return total_confusion_matrix, mean_accuracy, tree, depth
@@ -341,7 +343,7 @@ def main():
 
     print("Pruned: ", args.prune, "\n")
 
-    (print("Max Depth: ", depth[0], "\n") if not args.prune else print("Avg Max Depth Before Prune: ", round(depth[0], 3), "\nAvg Max Depth After Prune: ", round(depth[1], 3), "\n"))
+    (print("Avg Max Depth: ", depth[0], "\n") if not args.prune else print("Avg Max Depth Before Prune: ", round(depth[0], 3), "\nAvg Max Depth After Prune: ", round(depth[1], 3), "\n"))
 
     print("Confusion Marix: \n", confusion_matrix,"\nAccuracy: \n", accuracy,"\nPrecision By Label: \n",precision,"\nRecall By Label: \n", recall,"\nF1 By Label: \n", f1, "\n")
 
