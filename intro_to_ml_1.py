@@ -153,24 +153,27 @@ def cross_validate(dataset, toPrune):
   # loop through each fold
   for i in range(n_folds):
     test_idx = folds[i]
-
-    # combine all other folds into the training set
-    train_idx = []
-    for j in range(n_folds):
-      if j != i:
-        train_idx.extend(folds[j])
-    train_idx = np.array(train_idx)
-
-    # split the dataset into trianing and test sets
     test_db = dataset[test_idx]
-    train_db = dataset[train_idx]
 
-    # train the tree on training data
-    tree = decision_tree_learning(train_db, 0)[0]
+    if ( not toPrune):
+      # combine all other folds into the training set
+      train_idx = []
+
+      for j in range(n_folds):
+        if j != i:
+          train_idx.extend(folds[j])
+      train_idx = np.array(train_idx)
+
+      # split the dataset into trianing and test sets
+      test_db = dataset[test_idx]
+      train_db = dataset[train_idx]
+
+      # train the tree on training data
+      tree = decision_tree_learning(train_db, 0)[0]
 
     # Code for pruning
     if toPrune:
-      lowest_error = (np.inf, i, tree)
+      lowest_error = (np.inf, i, 0)
       for j in range(10):
         if j == i: # Don't use the current test data as a validation set
           continue
@@ -182,6 +185,8 @@ def cross_validate(dataset, toPrune):
             if k != i and k != j:
                 prune_idx.extend(folds[k])
         pruning_data = dataset[prune_idx]
+
+        tree = decision_tree_learning(pruning_data, 0)[0]
 
         # Prune the tree based on different folds being the validation set
         pruned_tree = prune_tree(tree, pruning_data, pruning_validation_data)
