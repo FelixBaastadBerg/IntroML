@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
+from viz_tree_intro_ml import visualize_tree
 
 # Entropy Function
 # Takes in a tuple of label counts "counts" and returns the entropy
@@ -296,7 +297,7 @@ def prune_tree(tree, train_data, validation_data):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', type=str, required=True, help='Path to dataset txt file')
-    parser.add_argument('--seed', type=int, default=0)
+    parser.add_argument('--seed', type=int, default=23)
     parser.add_argument('--prune', action='store_true', help='Enable reduced-error pruning (nested CV)')
     parser.add_argument('--visualize', action='store_true',
                     help='Render a visualization of a tree trained on the FULL dataset')
@@ -309,6 +310,8 @@ def main():
     confusion_matrix, average, tree = cross_validate(dataset, args.prune)
     precision, recall, f1 = precision_recall_f1(confusion_matrix)
 
+    
+
     print("Seed Used: ", args.seed, "\n")
 
     print("Pruned : ", args.prune, "\n")
@@ -316,8 +319,16 @@ def main():
     print("Confusion Marix: \n", confusion_matrix,"\nAverage: \n", average,"\nPrecision By Label: \n",precision,"\nRecall By Label: \n", recall,"\nF1 By Label: \n", f1, "\n")
 
     if (args.visualize):
-       # Do visualization
-       pass
+      X, y = dataset[:,:-2], dataset[:,-1] 
+      feature_names = [f"AP{i}" for i in range(X.shape[1])]
+      visualize_tree(
+            tree,
+            feature_names=feature_names,
+            title=f"Decision Tree trained on {args.data}",
+            data_path=args.data,   # autosave next to dataset folder
+            show_fig=False
+        )
+       
     
 if __name__ == '__main__':
     # Allow importing this file as a module without running
