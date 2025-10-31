@@ -299,7 +299,7 @@ def main():
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--prune', action='store_true', help='Enable reduced-error pruning (nested CV)')
     parser.add_argument('--visualize', action='store_true',
-                    help='Render a Graphviz visualization of a tree trained on the FULL dataset')
+                    help='Render a visualization of a tree trained on the FULL dataset')
     args = parser.parse_args()
 
     dataset = np.loadtxt(args.data)
