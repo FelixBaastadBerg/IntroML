@@ -1,7 +1,9 @@
 # Decision Tree Coursework – COMP70050 (Introduction to Machine Learning)
 
 This repository contains the implementation and evaluation of a Decision Tree Classifier for indoor room localisation using WiFi signal strengths.  
-The work follows the COMP70050 coursework specification. The 
+The work follows the COMP70050 coursework specification. 
+
+The code trains the decision tree using the information gain splitting rule, choosing the feature and value that maximizes information gain under entropy rules. For this, we use a 10-fold cross-validation and report average performance over these 10 evaluations. We do this for both noisy and clean data and for pruned and full trees to see how pruning affects generalization and test performance. The results shows that for the noisy data, the model generalizes better with pruning. 
 
 ---
 
@@ -15,29 +17,9 @@ The repository contains the following files:
 
 ---
 
-## 🧠 Overview
-
-The project builds and evaluates decision trees on both **clean** and **noisy** datasets (`wifi_db/clean_dataset.txt`, `wifi_db/noisy_dataset.txt`), using **10-fold cross-validation**.  
-It supports post-training **reduced-error pruning** and includes optional tree visualization for the clean dataset.
-
-**Main file:** `main.py`  
-**Core functionality:**  
-- Decision tree learning with continuous features  
-- 10-fold cross-validation  
-- Accuracy, precision, recall, and F1-score per class  
-- Reduced-error pruning   
-- Tree visualization
-
----
 
 ## Run code
-python intro_to_ml_1.py --data "wifi_db/clean_dataset.txt"
-
-python intro_to_ml_1.py --data "wifi_db/clean_dataset.txt" --prune
-
-python intro_to_ml_1.py --data "wifi_db/noisy_dataset.txt"
-
-python intro_to_ml_1.py --data "wifi_db/noisy_dataset.txt" --prune
-
-python intro_to_ml_1.py --data "wifi_db/clean_dataset.txt" --visualize
-
+python train.py --data "wifi_db/clean_dataset.txt" --visualize
+python train.py --data "wifi_db/clean_dataset.txt" --prune --visualize
+python train.py --data "wifi_db/noisy_dataset.txt" --visualize
+python train.py --data "wifi_db/noisy_dataset.txt" --prune --visualize
