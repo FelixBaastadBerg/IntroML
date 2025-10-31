@@ -201,7 +201,7 @@ def cross_validate(dataset, toPrune):
 
   mean_accuracy = np.mean(fold_accuracies)
 
-  return total_confusion_matrix, mean_accuracy
+  return total_confusion_matrix, mean_accuracy, tree
 
 def precision_recall_f1(confusion_matrix):
   precision = []
@@ -306,7 +306,7 @@ def main():
 
     np.random.RandomState(args.seed).shuffle(dataset)
 
-    confusion_matrix, average = cross_validate(dataset, args.prune)
+    confusion_matrix, average, tree = cross_validate(dataset, args.prune)
     precision, recall, f1 = precision_recall_f1(confusion_matrix)
 
     print("Seed Used: ", args.seed, "\n")
