@@ -299,6 +299,17 @@ def prune_tree(tree, train_data, validation_data):
     # Return the node
     return (feature, thresh, left, right)
 
+def getDepth(node, currentDepth=0):
+   if isinstance(node, np.float64):
+      return node, currentDepth
+
+   _, _, left, right = node
+
+   left_depth = getDepth(left, currentDepth + 1)
+   right_depth = getDepth(right, currentDepth + 1)
+
+   return max(left_depth, right_depth)
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', type=str, required=True, help='Path to dataset txt file')
@@ -319,7 +330,9 @@ def main():
 
     print("Seed Used: ", args.seed, "\n")
 
-    print("Pruned : ", args.prune, "\n")
+    print("Pruned: ", args.prune, "\n")
+
+    print("Max Depth: ", getDepth(tree))
 
     print("Confusion Marix: \n", confusion_matrix,"\nAccuracy: \n", accuracy,"\nPrecision By Label: \n",precision,"\nRecall By Label: \n", recall,"\nF1 By Label: \n", f1, "\n")
 
