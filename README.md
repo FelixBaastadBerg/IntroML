@@ -19,6 +19,7 @@ The repository contains the following files:
 
 
 ## Run code
+```bash
 python train.py --data "wifi_db/clean_dataset.txt" --visualize
 python train.py --data "wifi_db/clean_dataset.txt" --prune --visualize
 python train.py --data "wifi_db/noisy_dataset.txt" --visualize
