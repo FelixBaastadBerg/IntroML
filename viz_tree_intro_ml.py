@@ -15,7 +15,7 @@ DESIGN = {
     "equal_aspect": True,       # keep circles perfectly circular in output
 
     # Leaf nodes (circles)
-    "leaf_radius": 0.35,        # circle radius (in data units)
+    "leaf_radius": 0.45,        # circle radius (in data units)
     "leaf_fontsize": 12,        # number inside the circle
     "leaf_zorder": 4,           # draw leaves above edges
 
@@ -31,18 +31,18 @@ DESIGN = {
     "edge_label_false": "F",    # label for right/False branch (> threshold)
     "edge_fontsize": 10,
     # White background behind the edge label so it sits *in front* of the line
-    "edge_label_bbox": dict(boxstyle="round,pad=0.10", fc="white", ec="none"),
+    "edge_label_bbox": dict(boxstyle="round,pad=0.40", fc="white", ec="black", lw=0.5),
     "edge_label_zorder": 3,     # above edges, below leaves/internal nodes
 
     # Title
     "title_fontsize": 14,
 
     # Legend
-    "legend_fontsize": 12,
+    "legend_fontsize": 30,
     # Put legend down-right. "loc" anchors the legend box *relative to* bbox_to_anchor.
     # For "further down to the right", push bbox_to_anchor to (1.10, -0.02) with loc="lower right".
-    "legend_loc": "lower right",
-    "legend_bbox_to_anchor": (1.10, -0.02),
+    "legend_loc": "lower left",
+    "legend_bbox_to_anchor": (0.05, 0.05),
 
     # Labels
     "leaf_label_prefix": "Room",  # prefix for legend entries
@@ -215,11 +215,11 @@ def visualize_tree(
     ax.legend(handles=patches,
               loc=DESIGN["legend_loc"],
               bbox_to_anchor=DESIGN["legend_bbox_to_anchor"],
-              frameon=False,
+              frameon=True,
               fontsize=DESIGN["legend_fontsize"])
 
-    if title:
-        ax.set_title(title, fontsize=DESIGN["title_fontsize"], pad=8)
+    #if title:
+    #    ax.set_title(title, fontsize=DESIGN["title_fontsize"], pad=8)
 
     # Decide output path
     if data_path:
@@ -228,7 +228,7 @@ def visualize_tree(
         base = os.path.splitext(os.path.basename(data_path))[0]
         out_path = os.path.join(out_dir, f"tree_{base}_intro_ml.png")
     else:
-        out_path = "tree_visualization_intro_ml.png"
+        out_path = "tree_noisy_pruned.png"
 
     fig.savefig(out_path, dpi=dpi, bbox_inches="tight")
     plt.close(fig)
