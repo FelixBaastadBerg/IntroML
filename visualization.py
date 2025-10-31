@@ -175,6 +175,7 @@ def visualize_tree(
     data_path: Optional[str] = None,
     dpi: int = 150,
     show_fig: bool = True,
+    pruned: bool = False
 ) -> str:
     """
     Visualize a decision tree produced by intro_to_ml_1.py (tuple-based).
@@ -221,14 +222,21 @@ def visualize_tree(
     #if title:
     #    ax.set_title(title, fontsize=DESIGN["title_fontsize"], pad=8)
 
-    # Decide output path
+        # Decide output path
+    img_dir = "img"
+    os.makedirs(img_dir, exist_ok=True)
+
+    # Infer noisy/clean from data_path (fallback = noisy)
     if data_path:
-        out_dir = os.path.dirname(data_path) or "."
-        os.makedirs(out_dir, exist_ok=True)
-        base = os.path.splitext(os.path.basename(data_path))[0]
-        out_path = os.path.join(out_dir, f"tree_{base}_intro_ml.png")
+        filename = os.path.basename(data_path).lower()
+        noisy_or_clean = "noisy" if "noisy" in filename else "clean"
     else:
-        out_path = "tree_noisy_pruned.png"
+        noisy_or_clean = "noisy"
+
+    # Use the boolean you passed in
+    pruned_or_no = "prune" if pruned else "noprune"
+
+    out_path = os.path.join(img_dir, f"tree_{pruned_or_no}_{noisy_or_clean}.png")
 
     fig.savefig(out_path, dpi=dpi, bbox_inches="tight")
     plt.close(fig)

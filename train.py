@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import argparse
-from viz_tree_intro_ml import visualize_tree
+from visualization import visualize_tree
 
 # Entropy Function
 # Takes in a tuple of label counts "counts" and returns the entropy
@@ -345,14 +345,15 @@ def main():
     print("Confusion Marix: \n", confusion_matrix,"\nAccuracy: \n", accuracy,"\nPrecision By Label: \n",precision,"\nRecall By Label: \n", recall,"\nF1 By Label: \n", f1, "\n")
 
     if (args.visualize):
-      X, y = dataset[:,:-2], dataset[:,-1] 
+      X, y = dataset[:,:-1], dataset[:,-1] 
       feature_names = [f"AP{i}" for i in range(X.shape[1])]
       visualize_tree(
             tree,
             feature_names=feature_names,
             title=f"Decision Tree trained on {args.data}",
             data_path=args.data,   # autosave next to dataset folder
-            show_fig=False
+            show_fig=False,
+            pruned = args.prune
         )
        
     
