@@ -8,7 +8,10 @@ The work follows the COMP70050 coursework specification. The
 ## Repository Overview
 
 The repository contains the following files:
-- *img* is the folder where the visualizations are exported to. Our four images are four the combinations of $(\text{prune}, \texxt{no prune}) \times (\text{clean data}, \text{noisy data})$.
+- *img* is the folder where the visualizations are exported to. Our four images are four the combinations of $(\text{prune}, \text{no prune}) \times (\text{clean data}, \text{noisy data})$.
+- *wifi_db* is the folder containing the clean and noisy sensory wifi data, along with a label-column describing which room the signal is recorded from.
+- *train.py* trains and evaluates the tree, outputing confusion matrix, accuracy, precision, recall, F1 and average max depth.
+- *visualize.py* declares the function visualize_tree which is used in train.py to store images in the img folder. 
 
 ---
 
