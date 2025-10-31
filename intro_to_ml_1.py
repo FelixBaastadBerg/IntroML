@@ -312,7 +312,7 @@ def main():
 
     np.random.RandomState(args.seed).shuffle(dataset)
 
-    confusion_matrix, average, tree = cross_validate(dataset, args.prune)
+    confusion_matrix, accuracy, tree = cross_validate(dataset, args.prune)
     precision, recall, f1 = precision_recall_f1(confusion_matrix)
 
     
@@ -321,7 +321,7 @@ def main():
 
     print("Pruned : ", args.prune, "\n")
 
-    print("Confusion Marix: \n", confusion_matrix,"\nAverage: \n", average,"\nPrecision By Label: \n",precision,"\nRecall By Label: \n", recall,"\nF1 By Label: \n", f1, "\n")
+    print("Confusion Marix: \n", confusion_matrix,"\nAccuracy: \n", accuracy,"\nPrecision By Label: \n",precision,"\nRecall By Label: \n", recall,"\nF1 By Label: \n", f1, "\n")
 
     if (args.visualize):
       X, y = dataset[:,:-2], dataset[:,-1] 
