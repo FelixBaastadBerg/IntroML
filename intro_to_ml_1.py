@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import argparse
 
 # Entropy Function
 # Takes in a tuple of label counts "counts" and returns the entropy
