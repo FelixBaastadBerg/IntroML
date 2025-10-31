@@ -171,8 +171,13 @@ def cross_validate(dataset, toPrune):
       # train the tree on training data
       tree = decision_tree_learning(train_db, 0)[0]
 
+      max_depth = getDepth(tree)
+      depth = (max_depth, max_depth)
+
     # Code for pruning
     if toPrune:
+      depths_before = []
+      depths_after = []
       lowest_error = (np.inf, i, 0)
       for j in range(10):
         if j == i: # Don't use the current test data as a validation set
@@ -188,8 +193,11 @@ def cross_validate(dataset, toPrune):
 
         tree = decision_tree_learning(pruning_data, 0)[0]
 
+        depths_before.append(getDepth(tree))
+
         # Prune the tree based on different folds being the validation set
         pruned_tree = prune_tree(tree, pruning_data, pruning_validation_data)
+        depths_after.append(getDepth(pruned_tree))
         error = 1 - evaluate(pruning_validation_data, pruned_tree)[0]
         if lowest_error[0] > error:
           lowest_error = (error, j, pruned_tree)
@@ -197,6 +205,7 @@ def cross_validate(dataset, toPrune):
       # Use the best pruned tree
       best_pruned_tree = lowest_error[2]
       tree = best_pruned_tree
+      depth = (np.mean(depths_before), np.mean(depths_after))
 
     # evaluate the trained tree on the test data
     accuracy, labels, predictions = evaluate(test_db, tree)
@@ -207,7 +216,7 @@ def cross_validate(dataset, toPrune):
 
   mean_accuracy = np.mean(fold_accuracies)
 
-  return total_confusion_matrix, mean_accuracy, tree
+  return total_confusion_matrix, mean_accuracy, tree, depth
 
 def precision_recall_f1(confusion_matrix):
   precision = []
@@ -323,7 +332,7 @@ def main():
 
     np.random.RandomState(args.seed).shuffle(dataset)
 
-    confusion_matrix, accuracy, tree = cross_validate(dataset, args.prune)
+    confusion_matrix, accuracy, tree, depth = cross_validate(dataset, args.prune)
     precision, recall, f1 = precision_recall_f1(confusion_matrix)
 
     
@@ -332,7 +341,7 @@ def main():
 
     print("Pruned: ", args.prune, "\n")
 
-    print("Max Depth: ", getDepth(tree))
+    (print("Max Depth: ", depth[0], "\n") if not args.prune else print("Avg Max Depth Before Prune: ", depth[0], "\nAvg Max Depth After Prune: ", depth[1], "\n"))
 
     print("Confusion Marix: \n", confusion_matrix,"\nAccuracy: \n", accuracy,"\nPrecision By Label: \n",precision,"\nRecall By Label: \n", recall,"\nF1 By Label: \n", f1, "\n")
 
