@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import argparse
 from visualization import visualize_tree
 
+
 # Entropy Function
 # Takes in a tuple of label counts "counts" and returns the entropy
 def H(counts):
@@ -76,7 +77,6 @@ def find_split(data):
   return best_feature, best_thresh
 
 
-
 # Function for building the decision tree
 # Takes in the dataset as a whole "data" and a starting depth for the top node "depth"
 def decision_tree_learning(data, depth):
@@ -98,8 +98,11 @@ def decision_tree_learning(data, depth):
   return (best_feature, best_thresh, left_data, right_data), max(depth_left, depth_right)
 
 
-# Evaluation
+# - Evaluation -
 
+# Traverses a binary decision tree (represented as nested tuples) for a single data row.
+# At each internal node, compares the row's feature value to the threshold and moves left or 
+# right accordingly, until reaching and returning the leaf value.
 def traverse_tree(tree,row):
   # take the tree structure, ignore depth
   if isinstance(tree, tuple) and len(tree) == 2:
@@ -119,7 +122,11 @@ def traverse_tree(tree,row):
 
   return node
 
-# using the specs variable names
+
+# Evaluates a trained decision tree on a test dataset.
+# For each sample in the test set, predicts its label using the trained tree
+# and compares it to the true label to compute accuracy.
+# Returns the overall accuracy, the true labels, and the predicted labels.
 def evaluate(test_db, trained_tree):
   features = test_db[:, :-1]
   labels = test_db[:,-1]
@@ -130,6 +137,9 @@ def evaluate(test_db, trained_tree):
 
   return accuracy, labels, predictions
 
+
+# Constructs a 4×4 confusion matrix from true and predicted class labels.
+# Each cell (i, j) counts how many samples of true class (i+1) were predicted as class (j+1).
 def confusion_matrix(labels, predictions):
   confusion_matrix = np.zeros((4,4))
 
@@ -140,6 +150,20 @@ def confusion_matrix(labels, predictions):
   return confusion_matrix
 
 
+# Performs 10-fold cross-validation on a dataset using a decision tree model.
+# 
+# For each fold:
+#   - Uses one fold as the test set and the rest for training.
+#   - Trains a decision tree (optionally with "toPrune").
+#   - further splits training data to find the best pruned tree
+#     using validation folds, selecting the model with the lowest validation error.
+#   - Evaluates the final tree on the test fold, recording accuracy and confusion matrix.
+#
+# Returns:
+#   total_confusion_matrix: cumulative 4×4 confusion matrix across all folds
+#   mean_accuracy: average accuracy across folds
+#   tree: the final tree from the last fold
+#   depth: average maximum depth of trees across folds
 def cross_validate(dataset, toPrune):
   # split dataset by indexes into 10 folds
   idx = np.arange(len(dataset))
@@ -217,6 +241,9 @@ def cross_validate(dataset, toPrune):
 
   return total_confusion_matrix, mean_accuracy, tree, depth
 
+
+# Computes per-class precision, recall, and F1 scores from a confusion matrix.
+# Returns a list of per-class precision, recall and F1 scores.
 def precision_recall_f1(confusion_matrix):
   precision = []
   recall = []
@@ -262,7 +289,7 @@ def precision_recall_f1(confusion_matrix):
 
 
 # Funtion for pruning an existing decision tree
-# Takes in the tree "tree", some data to assign majority labels "train_data", and a validation set for testing the pruned tree "validation_data"
+# Takes in the tree, some data to assign majority labels, and a validation set for testing the pruned tree
 # Returns the pruned tree
 def prune_tree(tree, train_data, validation_data):
     # Return if the tree is just one leaf
@@ -307,6 +334,9 @@ def prune_tree(tree, train_data, validation_data):
     # Return the node
     return (feature, thresh, left, right)
 
+
+# Recursively computes the maximum depth of a decision tree.
+# Returns the deepest level reached in the tree.
 def getDepth(node, currentDepth=0):
    if isinstance(node, np.float64):
       return currentDepth
@@ -318,6 +348,12 @@ def getDepth(node, currentDepth=0):
 
    return max(left_depth, right_depth)
 
+
+# Command-line entry point:
+# - Parses arguments: --data, --seed, --prune, --visualize.
+# - Loads and shuffles the dataset with the given seed.
+# - Runs 10-fold cross-validation (optionally with pruning), getting confusion matrix, accuracy, tree, and avg depth.
+# - Computes per-class precision/recall/F1 and prints all results.
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', type=str, required=True, help='Path to dataset txt file')
